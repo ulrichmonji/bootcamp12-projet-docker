@@ -1,0 +1,54 @@
+version: '3.1'
+services:
+  api:
+    image: bootcamp12-studentlist:v1
+    container_name: api
+    volumes:
+      - $PWD/simple_api/student_age.json:/data/student_age.json
+    networks:
+      - bootcamp12
+  ihm:
+    depends_on:
+      - api  
+    image: php:apache
+    environment:
+      - USERNAME=toto
+      - PASSWORD=python
+    volumes:
+      - ./website:/var/www/html
+    ports:
+      - "80:80"
+    networks:
+      - bootcamp12     
+
+  registry:
+    image: registry:2
+    container_name: registry
+    volumes:
+      - ./website:/var/www/html
+      - ./config.yml:/etc/docker/registry/config.yml:ro      
+    ports:
+      - "4000:5000"
+    networks:
+      - registry
+
+  registry-ui:
+    depends_on:
+      - registry 
+    image: joxit/docker-registry-ui
+    ports:
+      - "4080:80"
+    networks:
+      - registry
+    environment:
+      - REGISTRY_URL="http://registry:5000"
+      - REGISTRY_TITLE="BOOTCAMP 12"
+#      - USE_CONTROL_CACHE_HEADER=true
+      - NGINX_PROXY_PASS_URL=http://registry:5000
+      - NGINX_PROXY_HEADER_Authorization=
+      - SINGLE_REGISTRY=true
+      - DELETE_IMAGES=true
+
+networks:
+  bootcamp12:
+  registry:
