@@ -45,9 +45,10 @@ services:
       - REGISTRY_TITLE="BOOTCAMP 12"
 #      - USE_CONTROL_CACHE_HEADER=true
       - NGINX_PROXY_PASS_URL=http://registry:5000
-      - NGINX_PROXY_HEADER_Authorization=
+#      - NGINX_PROXY_HEADER_Authorization=
       - SINGLE_REGISTRY=true
       - DELETE_IMAGES=true
+      - CATALOG_ELEMENTS_LIMIT=10
 
 networks:
   bootcamp12:
